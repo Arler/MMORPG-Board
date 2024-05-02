@@ -1,6 +1,6 @@
 from django.db import models
 
-from subacc_system.models import User
+from subaccount_system.models import User
 
 
 class Announcement(models.Model):

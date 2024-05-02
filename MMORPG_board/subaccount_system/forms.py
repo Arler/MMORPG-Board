@@ -17,19 +17,19 @@ class CustomSignupForm(SignupForm):
 
 
 class OneTimeCodeForm(forms.Form):
-	username = forms.CharField(max_length=150)
 	code = forms.CharField(max_length=16, label='Код')
 
 	def clean(self):
 		cleaned_data = super().clean()
-		username = cleaned_data.get('username')
 		code = cleaned_data.get('code')
-		cache_code = cache.get(f'one_time_code_username-{username}', None)
+		code = code.split(' ')
+		username = cache.get(code)
 
-		if User.objects.filter(username=username).exists() and cache_code == code:
+		if username:
 			user = User.objects.get(username=username)
 			common_users = Group.objects.get(name="Обычные пользователи")
 			user.groups.add(common_users)
+			cache.delete(f'{code}')
 			return cleaned_data
 		else:
-			raise ValidationError('Имя пользователя или код введены неправильно')
+			raise ValidationError('Код введён неправильно')

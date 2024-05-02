@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'board',
-    'subacc_system',
+    'subaccount_system',
     'tinymce',
     'django_filters',
     'allauth',
@@ -119,10 +119,10 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-LOGIN_REDIRECT_URL = "/subacc_system/onetimecode/"
-ACCOUNT_FORMS = {"signup": "subacc_system.forms.CustomSignupForm"}
+LOGIN_REDIRECT_URL = "/subaccount_system/onetimecode/"
+ACCOUNT_FORMS = {"signup": "subaccount_system.forms.CustomSignupForm"}
 
-AUTH_USER_MODEL = 'subacc_system.User'
+AUTH_USER_MODEL = 'subaccount_system.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

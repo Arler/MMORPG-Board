@@ -18,7 +18,7 @@ def create_one_time_code():
 @receiver(user_signed_up)
 def send_one_time_code(user, **kwargs):
     code = create_one_time_code()
-    cache.set(f'one_time_code_username-{user.username}', code)
+    cache.set(f'{code}', user.username)
 
     user_email = user.email
     subject = "Ваш одноразовый код для подтверждения аккаунта"
