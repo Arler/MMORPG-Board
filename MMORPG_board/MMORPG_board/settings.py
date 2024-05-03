@@ -119,7 +119,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-LOGIN_REDIRECT_URL = "/subaccount_system/onetimecode/"
+LOGIN_REDIRECT_URL = "/subaccountsystem/onetimecode/"
 ACCOUNT_FORMS = {"signup": "subaccount_system.forms.CustomSignupForm"}
 
 AUTH_USER_MODEL = 'subaccount_system.User'
