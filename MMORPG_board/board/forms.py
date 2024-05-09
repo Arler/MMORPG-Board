@@ -25,3 +25,7 @@ class CreateAnnouncementForm(forms.ModelForm):
 			raise ValidationError('Описание не должно быть идентично заголовку')
 
 		return cleaned_data
+
+
+class ResponseForm(forms.Form):
+	text = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
