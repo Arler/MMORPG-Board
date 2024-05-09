@@ -1,10 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'default.html' %}
 
-</body>
-</html>
+{% block title %}
+    Отклики
+{% endblock title %}
+
+{% block content %}
+{% if responses %}
+    <h3>Отклики</h3>
+    <table>
+        <tr>
+            <td>Откликнувшийся</td>
+            <td>Объявление</td>
+            <td>Дата</td>
+            <td>Текст</td>
+            <td>Статус</td>
+        </tr>
+        {% for response in responses %}
+            <tr>
+                <td>{{ response.responder }}</td>
+                <td><a href="{% url 'announcement' response.announcement.id %}">{{ response.announcement.title }}</a></td>
+                <td>{{ response.date_created }}</td>
+                <td>{{ response.text|safe }}</td>
+                {% if response.accepted %}
+                    <td>Принят</td>
+                {% else %}
+                    <td>Не принят</td>
+                {% endif %}
+                {% if not response.accepted %}
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="response_id" value="{{ response.id }}">
+                            <button type="submit" name="action" value="accept">Принять</button>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h3>Откликов нет</h3>
+{% endif %}
+{% endblock content %}

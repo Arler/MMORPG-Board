@@ -1,10 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'default.html' %}
 
-</body>
-</html>
+{% block title %}
+    Объявления
+{% endblock title %}
+
+{% block content %}
+    <h1>Все объявления {{ announcements|length }}</h1>
+    <hr>
+    {% if announcements %}
+        <table>
+            <tr>
+                <td>Заголовок</td>
+                <td>Дата размещения</td>
+                <td>Превью</td>
+                <td>Категории</td>
+                <td>Статус</td>
+            </tr>
+            {% for announcement in announcements %}
+                <tr>
+                    <td><a href="{% url 'announcement' announcement.id %}">{{ announcement.title }}</a></td>
+                    <td>{{ announcement.date_created|date:'d M Y H m' }}</td>
+                    <td>{{ announcement.text|truncatewords:20|safe }}</td>
+                    <td>{{ announcement.category }}</td>
+                    {% if announcement.active %}
+                        <td>Активно</td>
+                    {% else %}
+                        <td>Неактивно</td>
+                    {% endif %}
+                    {% if announcement.author.id == user.id %}
+                        <td>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="announcement_id" value="{{ announcement.id }}">
+                                <button type="submit" name="action" value="delete">Удалить объявление</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><br></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2>Объявлений нет!</h2>
+    {% endif %}
+{% endblock content %}

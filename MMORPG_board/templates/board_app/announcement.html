@@ -1,10 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'default.html' %}
 
-</body>
-</html>
+{% block title %}
+    Объявление
+{% endblock title %}
+
+{% block content %}
+<table>
+    <tr>
+        <td>Автор</td>
+        <td>Заголовок</td>
+        <td>Дата размещения</td>
+        <td>Содержание</td>
+        <td>Категории</td>
+        <td>Статус</td>
+    </tr>
+    <tr>
+        <td>{{ announcement.author }}</td>
+        <td>{{ announcement.title }}</td>
+        <td>{{ announcement.date_created|date:'d M Y h m' }}</td>
+        <td>{{ announcement.text|safe }}</td>
+        <td>{{ announcement.category }}</td>
+        {% if announcement.active %}
+            <td>Активно</td>
+        {% else %}
+            <td>Неактивно</td>
+        {% endif %}
+    </tr>
+</table>
+<hr>
+{% if user.is_authenticated %}
+    <h3>Оставить отклик</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.media }}
+        <input type="submit" value="Откликнутся">
+    </form>
+    <hr>
+{% endif %}
+{% if responses %}
+    <h3>Отклики</h3>
+    <table>
+        <tr>
+            <td>Откликнувшийся</td>
+            <td>Дата</td>
+            <td>Текст</td>
+            <td>Статус</td>
+        </tr>
+        {% for response in responses %}
+            <tr>
+                <td>{{ response.responder }}</td>
+                <td>{{ response.date_created|date:'d M Y H m' }}</td>
+                <td>{{ response.text|safe }}</td>
+                {% if response.accepted %}
+                    <td>Принят</td>
+                {% else %}
+                    <td>Не принят</td>
+                {% endif %}
+                {% if response.responder.id == user.id %}
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="response_id" value="{{ response.id }}">
+                            <button type="submit" name="action" value="delete">Удалить отклик</button>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h3>Откликов нет</h3>
+{% endif %}
+{% endblock content %}
