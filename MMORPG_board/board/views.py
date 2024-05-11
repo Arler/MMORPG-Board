@@ -102,6 +102,11 @@ class ResponsesList(PermissionRequiredMixin, ListView):
             else:
                 user.send_news = False
                 user.save()
+        elif request.POST['action'] == 'reject':
+            response_id = request.POST['response_id']
+            user_response = UserResponse.objects.get(pk=response_id)
+            user_response.rejected = True
+            user_response.save()
         return redirect('.')
 
     def dispatch(self, request, *args, **kwargs):

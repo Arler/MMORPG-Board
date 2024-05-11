@@ -35,15 +35,18 @@
                 <td>{{ response.text|safe }}</td>
                 {% if response.accepted %}
                     <td>Принят</td>
+                {% elif response.rejected %}
+                    <td>Отклонён</td>
                 {% else %}
                     <td>Не принят</td>
                 {% endif %}
-                {% if not response.accepted %}
+                {% if not response.accepted and not response.rejected %}
                     <td>
                         <form method="post">
                             {% csrf_token %}
                             <input type="hidden" name="response_id" value="{{ response.id }}">
                             <button type="submit" name="action" value="accept">Принять</button>
+                            <button type="submit" name="action" value="reject">Отклонить</button>
                         </form>
                     </td>
                 {% endif %}

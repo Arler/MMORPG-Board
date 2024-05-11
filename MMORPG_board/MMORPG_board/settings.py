@@ -139,11 +139,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static"
+# ]
 
 
 # Default primary key field type
@@ -154,9 +155,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media files
 
-MEDIA_ROOT = 'media/'
-MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": 500,
+    "menubar": False,
+    "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
+    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+    "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | media | image |"
+    "bold italic backcolor | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | "
+    "removeformat | help",
+}
 
 # Cache settings
 
