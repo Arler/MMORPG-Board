@@ -5,7 +5,9 @@ from django.shortcuts import redirect
 from django.core.cache import cache
 
 from .models import Announcement, UserResponse
+from subaccount_system.models import User
 from .forms import CreateAnnouncementForm, ResponseForm
+from .filters import UserResponseFilter
 
 
 class AnnouncementsList(ListView):
@@ -13,6 +15,7 @@ class AnnouncementsList(ListView):
     ordering = '-date_created'
     template_name = 'board_app/board.html'
     context_object_name = 'announcements'
+    paginate_by = 10
 
     def get_object(self, *args, **kwargs):
         obj = cache.get(f'announcement-{self.kwargs["pk"]}', None)
@@ -53,7 +56,7 @@ class AnnouncementDetail(DetailView, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['responses'] = UserResponse.objects.filter(announcement=context['announcement']).all()
+        context['responses'] = UserResponse.objects.filter(announcement=context['announcement']).all().order_by('-date_created')
         return context
 
 
@@ -63,6 +66,12 @@ class ResponsesList(PermissionRequiredMixin, ListView):
     ordering = '-date_created'
     template_name = 'board_app/responses.html'
     context_object_name = 'responses'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = UserResponse.objects.filter(announcement__author=self.request.user).order_by('-date_created')
+        self.filterset = UserResponseFilter(self.request.GET, queryset)
+        return self.filterset.qs
 
     def get_object(self, *args, **kwargs):
         obj = cache.get(f'userresponse-{self.kwargs["pk"]}', None)
@@ -75,17 +84,24 @@ class ResponsesList(PermissionRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['responses'] = UserResponse.objects.filter(announcement__author=self.request.user)
+        context['filterset'] = self.filterset
+        context['send_news'] = self.request.user.send_news
         return context
 
     def post(self, request):
-        if 'action' in request.POST:
-            action = request.POST['action']
-            if action == 'accept':
-                response_id = request.POST['response_id']
-                user_response = UserResponse.objects.get(pk=response_id)
-                user_response.accepted = True
-                user_response.save()
+        if request.POST['action'] == 'accept':
+            response_id = request.POST['response_id']
+            user_response = UserResponse.objects.get(pk=response_id)
+            user_response.accepted = True
+            user_response.save()
+        elif request.POST['action'] == 'send_news':
+            user = User.objects.get(pk=request.user.id)
+            if request.POST.get('send_news', False):
+                user.send_news = True
+                user.save()
+            else:
+                user.send_news = False
+                user.save()
         return redirect('.')
 
     def dispatch(self, request, *args, **kwargs):

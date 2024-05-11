@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Объявления</title>
+</head>
+<body>
+<h2>Новые объявления за прошедший день.</h2>
+{% for announcement in announcements %}
+    <a href="{{ link }}/{{ announcement.id }}">{{ announcement.title }}</a>
+{% endfor %}
+</body>
+</html>

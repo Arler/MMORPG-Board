@@ -1,12 +1,24 @@
 {% extends 'default.html' %}
 
+{% load custom_tags %}
+
 {% block title %}
     Отклики
 {% endblock title %}
 
 {% block content %}
+    <form method="post">
+        {% csrf_token %}
+        Отправлять новости
+        <input type="checkbox" name="send_news" {% if send_news %}checked{% endif %}>
+        <button type="submit" name="action" value="send_news">Применить</button>
+    </form>
 {% if responses %}
     <h3>Отклики</h3>
+    <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+    </form>
     <table>
         <tr>
             <td>Откликнувшийся</td>
@@ -40,5 +52,26 @@
     </table>
 {% else %}
     <h3>Откликов нет</h3>
+    <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+    </form>
+{% endif %}
+{% if page_obj.has_previous %}
+   <a href="?{% url_replace page=1 %}">1</a>
+   {% if page_obj.previous_page_number != 1 %}
+       ...
+       <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+   {% endif %}
+{% endif %}
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+   <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+   {% if paginator.num_pages != page_obj.next_page_number %}
+       ...
+       <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+   {% endif %}
 {% endif %}
 {% endblock content %}
