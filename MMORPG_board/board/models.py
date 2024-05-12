@@ -30,3 +30,4 @@ class UserResponse(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     text = tinymce_models.HTMLField()
     accepted = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)

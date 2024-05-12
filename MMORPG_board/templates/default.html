@@ -10,6 +10,7 @@
         {% load static %}
 
         <!-- Core theme CSS (includes Bootstrap)-->
+        <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
     <body>
@@ -20,13 +21,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li>
-                           {% if user.username %}
+                        {% if user.username %}
+                            <li>
                                 <span class="nav-link">Пользователь: {{ user.username }}</span>
-                           {% else %}
-                                <span class="nav-link"></span>
-                           {% endif %}
-                        </li>
+                            </li>
+                        {% endif %}
                         {% if perms.board.add_announcement %}
                             <li class="nav-item active">
                                <a class="nav-link" href="{% url 'create_announcement' %}">Разместить объявление</a>
@@ -50,12 +49,9 @@
         <!-- Page Content-->
         <section class="pt-4">
             <div class="container px-lg-5">
-                <!-- Page Features-->
-                <div class="row gx-lg-5">
-                    {% block content %}
-                    {{ flatpage.content }}
-                    {% endblock content %}
-                </div>
+                {% block content %}
+                {{ flatpage.content }}
+                {% endblock content %}
             </div>
         </section>
     </body>

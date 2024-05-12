@@ -1,13 +1,36 @@
 {% extends 'default.html' %}
 
+{% load custom_tags %}
+
 {% block title %}
     Отклики
 {% endblock title %}
 
 {% block content %}
+    <form method="post">
+        {% csrf_token %}
+        Отправлять новости
+        <input type="checkbox" name="send_news" {% if send_news %}checked{% endif %}>
+        <button type="submit" name="action" value="send_news">Применить</button>
+    </form>
+    <hr>
 {% if responses %}
     <h3>Отклики</h3>
+    <form action="" method="get">
+        <table>
+            {{ filterset.form.as_table }}
+        </table>
+        <input type="submit" value="Найти" />
+    </form>
+    <hr>
     <table>
+        <colgroup>
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+        </colgroup>
         <tr>
             <td>Откликнувшийся</td>
             <td>Объявление</td>
@@ -23,15 +46,18 @@
                 <td>{{ response.text|safe }}</td>
                 {% if response.accepted %}
                     <td>Принят</td>
+                {% elif response.rejected %}
+                    <td>Отклонён</td>
                 {% else %}
                     <td>Не принят</td>
                 {% endif %}
-                {% if not response.accepted %}
+                {% if not response.accepted and not response.rejected %}
                     <td>
                         <form method="post">
                             {% csrf_token %}
                             <input type="hidden" name="response_id" value="{{ response.id }}">
                             <button type="submit" name="action" value="accept">Принять</button>
+                            <button type="submit" name="action" value="reject">Отклонить</button>
                         </form>
                     </td>
                 {% endif %}
@@ -40,5 +66,28 @@
     </table>
 {% else %}
     <h3>Откликов нет</h3>
+    <form action="" method="get">
+        <table>
+            {{ filterset.form.as_table }}
+        </table>
+        <input type="submit" value="Найти" />
+    </form>
+{% endif %}
+{% if page_obj.has_previous %}
+   <a href="?{% url_replace page=1 %}">1</a>
+   {% if page_obj.previous_page_number != 1 %}
+       ...
+       <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+   {% endif %}
+{% endif %}
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+   <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+   {% if paginator.num_pages != page_obj.next_page_number %}
+       ...
+       <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+   {% endif %}
 {% endif %}
 {% endblock content %}
