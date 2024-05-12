@@ -140,11 +140,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static/'
+# STATIC_ROOT = 'static/'
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static"
-# ]
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
 
 
 # Default primary key field type
@@ -160,7 +160,7 @@ MEDIA_URL = '/media/'
 
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
-    "height": 500,
+    "height": 300,
     "menubar": False,
     "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,"
     "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"

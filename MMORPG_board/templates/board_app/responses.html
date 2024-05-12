@@ -13,13 +13,24 @@
         <input type="checkbox" name="send_news" {% if send_news %}checked{% endif %}>
         <button type="submit" name="action" value="send_news">Применить</button>
     </form>
+    <hr>
 {% if responses %}
     <h3>Отклики</h3>
     <form action="" method="get">
-       {{ filterset.form.as_p }}
-       <input type="submit" value="Найти" />
+        <table>
+            {{ filterset.form.as_table }}
+        </table>
+        <input type="submit" value="Найти" />
     </form>
+    <hr>
     <table>
+        <colgroup>
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+            <col width="20%">
+        </colgroup>
         <tr>
             <td>Откликнувшийся</td>
             <td>Объявление</td>
@@ -56,8 +67,10 @@
 {% else %}
     <h3>Откликов нет</h3>
     <form action="" method="get">
-       {{ filterset.form.as_p }}
-       <input type="submit" value="Найти" />
+        <table>
+            {{ filterset.form.as_table }}
+        </table>
+        <input type="submit" value="Найти" />
     </form>
 {% endif %}
 {% if page_obj.has_previous %}

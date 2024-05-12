@@ -9,6 +9,13 @@
 
 {% block content %}
 <table>
+    <colgroup>
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+    </colgroup>
     <tr>
         <td>Автор</td>
         <td>Заголовок</td>
@@ -33,6 +40,10 @@
 <hr>
 {% if user.is_authenticated %}
     <h3>Оставить отклик</h3>
+    <h5>
+        Чтобы вставить видео или картинку, нажмите на соответствующую
+        кнопку в окне редактора и вставьте ссылку на видео или картинку.
+    </h5>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
