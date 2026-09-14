@@ -6,6 +6,8 @@ services:
     environment:
       EMAIL_USERNAME: ""
       EMAIL_PASSWORD: ""
+      EMAIL_BACKEND: "smtp"
+      EMAIL_HOST: "smtp.gmail.com"
     volumes:
       - ./MMORPG_board/:/MMORPGBoardApp/
       - ./db_test.sqlite3:/MMORPGBoardApp/db.sqlite3
@@ -20,6 +22,8 @@ services:
     environment:
       EMAIL_USERNAME: ""
       EMAIL_PASSWORD: ""
+      EMAIL_BACKEND: "smtp"
+      EMAIL_HOST: "smtp.gmail.com"
     command: celery -A MMORPG_board worker -l info
     volumes:
       - ./db_test.sqlite3:/MMORPGBoardApp/db.sqlite3

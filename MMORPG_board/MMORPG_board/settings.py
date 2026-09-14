@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 import os
 
 load_dotenv(find_dotenv())
@@ -186,11 +187,19 @@ CACHES = {
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_USERNAME')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_HOST_USER = os.getenv('EMAIL_USERNAME')
-EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+if os.getenv('EMAIL_BACKEND') == 'console':
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+elif os.getenv('EMAIL_BACKEND') == 'smtp':
+    if os.getenv('EMAIL_PASSWORD') and os.getenv('EMAIL_USERNAME'):
+        EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    else:
+        raise ImproperlyConfigured("Some email environment variables not set.")
+else:
+    raise ImproperlyConfigured("You need to set EMAIL_BACKEND")
 
 
 # Celery settings
